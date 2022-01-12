@@ -23,3 +23,16 @@ class Instructor(models.Model):
     inst_name = models.CharField(max_length=100, blank=False)
     inst_designation = models.CharField(max_length=150, blank=False)
     inst_description = models.CharField(max_length=255, blank=False)
+
+
+class Category(models.Model):
+    cat_id = models.BigAutoField(auto_created=True, primary_key=True)
+    category = models.CharField(max_length=100, blank=False)
+
+
+class Course(models.Model):
+    course_id = models.BigAutoField(auto_created=True, primary_key=True)
+    cat_id = models.ForeignKey(Category, db_column="cat_id", on_delete=models.CASCADE)
+    course_title = models.CharField(max_length=200, blank=False)
+    course_desc = models.CharField(max_length=255, blank=False)
+    course_fee = models.IntegerField()

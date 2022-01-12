@@ -1,8 +1,6 @@
 from django.db.models import fields
 from rest_framework import serializers
-from backend.models import User
-from backend.models import Customer
-from backend.models import Instructor
+from backend.models import User, Customer, Instructor, Category, Course
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -21,8 +19,20 @@ class InstructorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Instructor
         fields = (
-            "instructor_id",
-            "instructor_name",
-            "instructor_designation",
-            "instructor_description",
+            "inst_id",
+            "inst_name",
+            "inst_designation",
+            "inst_description",
         )
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ("cat_id", "category")
+
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ("course_id", "cat_id", "course_title", "course_desc", "course_fee")
