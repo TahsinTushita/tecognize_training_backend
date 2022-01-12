@@ -23,6 +23,7 @@ class Instructor(models.Model):
     inst_name = models.CharField(max_length=100, blank=False)
     inst_designation = models.CharField(max_length=150, blank=False)
     inst_description = models.CharField(max_length=255, blank=False)
+    inst_img = models.ImageField(null=True, blank=True, upload_to="images/")
 
 
 class Category(models.Model):

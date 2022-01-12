@@ -1,8 +1,11 @@
+from django.db.models import query
 from django.shortcuts import render
 
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework import status
+import base64
+from django.db import connection
 
 from backend.models import Course, User, Customer, Instructor, Category
 
@@ -59,12 +62,59 @@ def instructor_list(request):
         return JsonResponse(inst_serializer.data, safe=False)
 
     elif request.method == "POST":
-        inst_data = JSONParser().parse(request)
-        inst_serializer = InstructorSerializer(data=inst_data)
-        if inst_serializer.is_valid():
-            inst_serializer.save()
-            return JsonResponse(inst_serializer.data, status=status.HTTP_201_CREATED)
-        return JsonResponse(inst_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # inst_data = JSONParser().parse(request)
+        # data = base64.b64decode(request)
+        # inst_serializer = InstructorSerializer(data=inst_data)
+        # if inst_serializer.is_valid():
+        #     inst_serializer.save()
+        #     return JsonResponse(inst_serializer.data, status=status.HTTP_201_CREATED)
+        # return JsonResponse(inst_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        cursor = connection.cursor()
+        prod = Instructor()
+        prod.inst_id = request.POST.get("inst_id")
+        prod.inst_name = request.POST.get("inst_name")
+        prod.inst_designation = request.POST.get("inst_designation")
+        prod.inst_description = request.POST.get("inst_description")
+        prod.inst_img = request.FILES["inst_img"]
+        prod.save()
+        # customer_data = JSONParser().parse(request)
+        # print(customer_data)
+        query = "INSERT INTO backend_instructor VALUES(%s,%s,%s,%s,%s)"
+
+        cursor.execute(
+            query,
+            params=(
+                prod.inst_id,
+                prod.inst_name,
+                prod.inst_designation,
+                prod.inst_description,
+                prod.inst_img,
+            ),
+        )
+        r = cursor.fetchone()
+        return JsonResponse(r, safe=False)
+
+
+# @api_view(["PUT"])
+# def customer_fee_update(request):
+# cursor = connection.cursor()
+# customer_data = JSONParser().parse(request)
+# # customer_data = json.load(request)
+# print(customer_data)
+# query = "UPDATE training_backend_customer SET cust_total_fee=%s,cust_paid_fee=%s,cust_due_fee=%s,cust_units=%s WHERE cust_id=%s"
+
+# cursor.execute(
+#     query,
+#     params=(
+#         customer_data["cust_total_fee"],
+#         customer_data["cust_paid_fee"],
+#         customer_data["cust_due_fee"],
+#         customer_data["cust_units"],
+#         customer_data["cust_id"],
+#     ),
+# )
+# r = cursor.fetchone()
+# return JsonResponse(r, safe=False)
 
 
 # Customer

@@ -23,6 +23,7 @@ class InstructorSerializer(serializers.ModelSerializer):
             "inst_name",
             "inst_designation",
             "inst_description",
+            "inst_img",
         )
 
 
