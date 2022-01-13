@@ -37,3 +37,10 @@ class Course(models.Model):
     course_title = models.CharField(max_length=200, blank=False)
     course_desc = models.CharField(max_length=255, blank=False)
     course_fee = models.IntegerField()
+    course_img = models.ImageField(null=True, blank=True, upload_to="course_images/")
+
+
+class Gallery(models.Model):
+    img_id = models.BigAutoField(auto_created=True, primary_key=True)
+    img_desc = models.CharField(max_length=255, blank=False)
+    image = models.ImageField(null=True, blank=True, upload_to="gallery/")

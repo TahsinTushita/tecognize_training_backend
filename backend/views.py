@@ -7,7 +7,7 @@ from rest_framework import status
 import base64
 from django.db import connection
 
-from backend.models import Course, User, Customer, Instructor, Category
+from backend.models import Course, User, Customer, Instructor, Category, Gallery
 
 from backend.serializers import (
     UserSerializer,
@@ -15,6 +15,7 @@ from backend.serializers import (
     InstructorSerializer,
     CategorySerializer,
     CourseSerializer,
+    GallerySerializer,
 )
 
 from rest_framework.decorators import api_view
@@ -62,59 +63,43 @@ def instructor_list(request):
         return JsonResponse(inst_serializer.data, safe=False)
 
     elif request.method == "POST":
-        # inst_data = JSONParser().parse(request)
         # data = base64.b64decode(request)
-        # inst_serializer = InstructorSerializer(data=inst_data)
-        # if inst_serializer.is_valid():
-        #     inst_serializer.save()
-        #     return JsonResponse(inst_serializer.data, status=status.HTTP_201_CREATED)
-        # return JsonResponse(inst_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        cursor = connection.cursor()
-        prod = Instructor()
-        prod.inst_id = request.POST.get("inst_id")
-        prod.inst_name = request.POST.get("inst_name")
-        prod.inst_designation = request.POST.get("inst_designation")
-        prod.inst_description = request.POST.get("inst_description")
-        prod.inst_img = request.FILES["inst_img"]
-        prod.save()
-        # customer_data = JSONParser().parse(request)
-        # print(customer_data)
-        query = "INSERT INTO backend_instructor VALUES(%s,%s,%s,%s,%s)"
-
-        cursor.execute(
-            query,
-            params=(
-                prod.inst_id,
-                prod.inst_name,
-                prod.inst_designation,
-                prod.inst_description,
-                prod.inst_img,
-            ),
+        inst_name = request.POST.get("inst_name")
+        inst_designation = request.POST.get("inst_designation")
+        inst_description = request.POST.get("inst_description")
+        inst_img = request.FILES["inst_img"]
+        inst_serializer = InstructorSerializer(
+            data={
+                "inst_name": inst_name,
+                "inst_designation": inst_designation,
+                "inst_description": inst_description,
+                "inst_img": inst_img,
+            }
         )
-        r = cursor.fetchone()
-        return JsonResponse(r, safe=False)
+        if inst_serializer.is_valid():
+            inst_serializer.save()
+            return JsonResponse(inst_serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(inst_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # cursor = connection.cursor()
+        # prod = Instructor()
+        # prod.inst_name = request.POST.get("inst_name")
+        # prod.inst_designation = request.POST.get("inst_designation")
+        # prod.inst_description = request.POST.get("inst_description")
+        # prod.inst_img = request.FILES["inst_img"]
+        # prod.save()
+        # query = "INSERT INTO backend_instructor VALUES(%s,%s,%s,%s)"
 
-
-# @api_view(["PUT"])
-# def customer_fee_update(request):
-# cursor = connection.cursor()
-# customer_data = JSONParser().parse(request)
-# # customer_data = json.load(request)
-# print(customer_data)
-# query = "UPDATE training_backend_customer SET cust_total_fee=%s,cust_paid_fee=%s,cust_due_fee=%s,cust_units=%s WHERE cust_id=%s"
-
-# cursor.execute(
-#     query,
-#     params=(
-#         customer_data["cust_total_fee"],
-#         customer_data["cust_paid_fee"],
-#         customer_data["cust_due_fee"],
-#         customer_data["cust_units"],
-#         customer_data["cust_id"],
-#     ),
-# )
-# r = cursor.fetchone()
-# return JsonResponse(r, safe=False)
+        # cursor.execute(
+        #     query,
+        #     params=(
+        #         prod.inst_name,
+        #         prod.inst_designation,
+        #         prod.inst_description,
+        #         prod.inst_img,
+        #     ),
+        # )
+        # r = cursor.fetchone()
+        # return JsonResponse(r, safe=False)
 
 
 # Customer
@@ -181,11 +166,50 @@ def course_list(request):
         return JsonResponse(course_serializer.data, safe=False)
 
     elif request.method == "POST":
-        course_data = JSONParser().parse(request)
-        course_serializer = CourseSerializer(data=course_data)
+        cat_id = request.POST.get("cat_id")
+        course_title = request.POST.get("course_title")
+        course_desc = request.POST.get("course_desc")
+        course_fee = request.POST.get("course_fee")
+        course_img = request.FILES["course_img"]
+        course_serializer = CourseSerializer(
+            data={
+                "cat_id": cat_id,
+                "course_title": course_title,
+                "course_desc": course_desc,
+                "course_fee": course_fee,
+                "course_img": course_img,
+            }
+        )
+
         if course_serializer.is_valid():
             course_serializer.save()
             return JsonResponse(course_serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(
             course_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+@api_view(["GET", "POST"])
+def gallery_list(request):
+    if request.method == "GET":
+        gallery = Gallery.objects.all()
+
+        gallery_serializer = GallerySerializer(gallery, many=True)
+        return JsonResponse(gallery_serializer.data, safe=False)
+
+    elif request.method == "POST":
+        img_desc = request.POST.get("img_desc")
+        image = request.FILES["image"]
+        gallery_serializer = GallerySerializer(
+            data={
+                "img_desc": img_desc,
+                "image": image,
+            }
+        )
+
+        if gallery_serializer.is_valid():
+            gallery_serializer.save()
+            return JsonResponse(gallery_serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(
+            gallery_serializer.errors, status=status.HTTP_400_BAD_REQUEST
         )

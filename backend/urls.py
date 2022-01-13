@@ -7,4 +7,5 @@ urlpatterns = [
     url(r"^api/customers$", views.customer_list),
     url(r"^api/categories$", views.category_list),
     url(r"^api/courses$", views.course_list),
+    url(r"^api/gallery$", views.gallery_list),
 ]
