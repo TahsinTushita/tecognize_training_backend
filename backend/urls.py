@@ -8,4 +8,6 @@ urlpatterns = [
     url(r"^api/categories$", views.category_list),
     url(r"^api/courses$", views.course_list),
     url(r"^api/gallery$", views.gallery_list),
+    url(r"^api/blogs$", views.blog_list),
+    url(r"^api/reviews$", views.review_list),
 ]

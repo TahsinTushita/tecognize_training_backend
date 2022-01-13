@@ -7,7 +7,16 @@ from rest_framework import status
 import base64
 from django.db import connection
 
-from backend.models import Course, User, Customer, Instructor, Category, Gallery
+from backend.models import (
+    Course,
+    User,
+    Customer,
+    Instructor,
+    Category,
+    Gallery,
+    Blog,
+    Reviews,
+)
 
 from backend.serializers import (
     UserSerializer,
@@ -16,6 +25,8 @@ from backend.serializers import (
     CategorySerializer,
     CourseSerializer,
     GallerySerializer,
+    BlogSerializer,
+    ReviewSerializer,
 )
 
 from rest_framework.decorators import api_view
@@ -212,4 +223,64 @@ def gallery_list(request):
             return JsonResponse(gallery_serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(
             gallery_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+@api_view(["GET", "POST"])
+def blog_list(request):
+    if request.method == "GET":
+        blogs = Blog.objects.all()
+
+        blog_serializer = BlogSerializer(blogs, many=True)
+        return JsonResponse(blog_serializer.data, safe=False)
+
+    elif request.method == "POST":
+        blog_title = request.POST.get("blog_title")
+        blog = request.POST.get("blog")
+        blog_author = request.POST.get("blog_author")
+        blog_img = request.FILES["blog_img"]
+        publish_date = request.POST.get("publish_date")
+        blog_serializer = BlogSerializer(
+            data={
+                "blog_title": blog_title,
+                "blog": blog,
+                "blog_author": blog_author,
+                "blog_img": blog_img,
+                "publish_date": publish_date,
+            }
+        )
+
+        if blog_serializer.is_valid():
+            blog_serializer.save()
+            return JsonResponse(blog_serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(blog_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET", "POST"])
+def review_list(request):
+    if request.method == "GET":
+        reviews = Reviews.objects.all()
+
+        review_serializer = ReviewSerializer(reviews, many=True)
+        return JsonResponse(review_serializer.data, safe=False)
+
+    elif request.method == "POST":
+        reviewer_name = request.POST.get("reviewer_name")
+        reviewer_designation = request.POST.get("reviewer_designation")
+        review = request.POST.get("review")
+        reviewer_img = request.FILES["reviewer_img"]
+        review_serializer = ReviewSerializer(
+            data={
+                "reviewer_name": reviewer_name,
+                "reviewer_designation": reviewer_designation,
+                "review": review,
+                "reviewer_img": reviewer_img,
+            }
+        )
+
+        if review_serializer.is_valid():
+            review_serializer.save()
+            return JsonResponse(review_serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(
+            review_serializer.errors, status=status.HTTP_400_BAD_REQUEST
         )

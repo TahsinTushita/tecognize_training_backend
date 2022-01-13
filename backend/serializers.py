@@ -1,6 +1,15 @@
 from django.db.models import fields
 from rest_framework import serializers
-from backend.models import User, Customer, Instructor, Category, Course, Gallery
+from backend.models import (
+    User,
+    Customer,
+    Instructor,
+    Category,
+    Course,
+    Gallery,
+    Blog,
+    Reviews,
+)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -50,3 +59,28 @@ class GallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = Gallery
         fields = ("img_id", "img_desc", "image")
+
+
+class BlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = (
+            "blog_id",
+            "blog_title",
+            "blog",
+            "blog_author",
+            "blog_img",
+            "publish_date",
+        )
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reviews
+        fields = (
+            "id",
+            "reviewer_name",
+            "reviewer_designation",
+            "review",
+            "reviewer_img",
+        )
