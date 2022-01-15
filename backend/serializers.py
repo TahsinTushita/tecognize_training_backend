@@ -48,6 +48,7 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = (
             "course_id",
             "cat_id",
+            "inst_id",
             "course_title",
             "course_desc",
             "course_fee",

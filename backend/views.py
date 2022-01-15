@@ -178,6 +178,7 @@ def course_list(request):
 
     elif request.method == "POST":
         cat_id = request.POST.get("cat_id")
+        inst_id = request.POST.get("inst_id")
         course_title = request.POST.get("course_title")
         course_desc = request.POST.get("course_desc")
         course_fee = request.POST.get("course_fee")
@@ -185,6 +186,7 @@ def course_list(request):
         course_serializer = CourseSerializer(
             data={
                 "cat_id": cat_id,
+                "inst_id": inst_id,
                 "course_title": course_title,
                 "course_desc": course_desc,
                 "course_fee": course_fee,

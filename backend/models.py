@@ -34,6 +34,9 @@ class Category(models.Model):
 class Course(models.Model):
     course_id = models.BigAutoField(auto_created=True, primary_key=True)
     cat_id = models.ForeignKey(Category, db_column="cat_id", on_delete=models.CASCADE)
+    inst_id = models.ForeignKey(
+        Instructor, db_column="inst_id", on_delete=models.CASCADE
+    )
     course_title = models.CharField(max_length=200, blank=False)
     course_desc = models.TextField()
     course_fee = models.IntegerField()
