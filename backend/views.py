@@ -6,6 +6,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 import base64
 from django.db import connection
+from django.http import HttpResponse
 
 from backend.models import (
     Course,
@@ -286,3 +287,9 @@ def review_list(request):
         return JsonResponse(
             review_serializer.errors, status=status.HTTP_400_BAD_REQUEST
         )
+
+
+@api_view(["GET"])
+def getImage(request):
+    image_data = open("media/gallery/gallery1.jpg", "rb").read()
+    return HttpResponse(image_data, content_type="image/png")

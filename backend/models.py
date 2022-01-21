@@ -40,13 +40,13 @@ class Course(models.Model):
     course_title = models.CharField(max_length=200, blank=False)
     course_desc = models.TextField()
     course_fee = models.IntegerField()
-    course_img = models.ImageField(null=True, blank=True, upload_to="course_images/")
+    course_img = models.ImageField(null=True, blank=True, upload_to="images/")
 
 
 class Gallery(models.Model):
     img_id = models.BigAutoField(auto_created=True, primary_key=True)
     img_desc = models.TextField()
-    image = models.ImageField(null=True, blank=True, upload_to="gallery/")
+    image = models.ImageField(null=True, blank=True, upload_to="images/")
 
 
 class Blog(models.Model):
@@ -54,7 +54,7 @@ class Blog(models.Model):
     blog_title = models.CharField(max_length=255, blank=False)
     blog = models.TextField()
     blog_author = models.CharField(max_length=100, blank=False)
-    blog_img = models.ImageField(null=True, blank=True, upload_to="blog_images/")
+    blog_img = models.ImageField(null=True, blank=True, upload_to="images/")
     publish_date = models.DateField()
 
 
@@ -62,6 +62,4 @@ class Reviews(models.Model):
     reviewer_name = models.CharField(max_length=100, blank=False)
     reviewer_designation = models.CharField(max_length=150, blank=False)
     review = models.TextField()
-    reviewer_img = models.ImageField(
-        null=True, blank=True, upload_to="reviewer_images/"
-    )
+    reviewer_img = models.ImageField(null=True, blank=True, upload_to="images/")

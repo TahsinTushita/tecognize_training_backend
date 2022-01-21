@@ -10,4 +10,5 @@ urlpatterns = [
     url(r"^api/gallery$", views.gallery_list),
     url(r"^api/blogs$", views.blog_list),
     url(r"^api/reviews$", views.review_list),
+    url(r"^api/image$", views.getImage),
 ]
