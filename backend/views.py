@@ -290,6 +290,6 @@ def review_list(request):
 
 
 @api_view(["GET"])
-def getImage(request):
-    image_data = open("media/gallery/gallery1.jpg", "rb").read()
+def getImage(request, imgName):
+    image_data = open("media/images/" + imgName, "rb").read()
     return HttpResponse(image_data, content_type="image/png")
