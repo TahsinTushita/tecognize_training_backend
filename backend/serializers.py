@@ -32,6 +32,7 @@ class InstructorSerializer(serializers.ModelSerializer):
             "inst_name",
             "inst_designation",
             "inst_description",
+            "inst_quote",
             "inst_img",
         )
 
@@ -39,7 +40,7 @@ class InstructorSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ("cat_id", "category")
+        fields = ("cat_id", "category", "cat_img")
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -51,6 +52,9 @@ class CourseSerializer(serializers.ModelSerializer):
             "inst_id",
             "course_title",
             "course_desc",
+            "course_content",
+            "course_classes",
+            "course_credit",
             "course_fee",
             "course_img",
         )

@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 
 class User(models.Model):
     user_id = models.BigAutoField(auto_created=True, primary_key=True)
@@ -23,12 +21,14 @@ class Instructor(models.Model):
     inst_name = models.CharField(max_length=100, blank=False)
     inst_designation = models.CharField(max_length=150, blank=False)
     inst_description = models.TextField()
+    inst_quote = models.TextField(null=True)
     inst_img = models.ImageField(null=True, blank=True, upload_to="images/")
 
 
 class Category(models.Model):
     cat_id = models.BigAutoField(auto_created=True, primary_key=True)
     category = models.CharField(max_length=100, blank=False)
+    cat_img = models.ImageField(null=True, blank=True, upload_to="images/")
 
 
 class Course(models.Model):
@@ -39,6 +39,9 @@ class Course(models.Model):
     )
     course_title = models.CharField(max_length=200, blank=False)
     course_desc = models.TextField()
+    course_content = models.TextField(null=True)
+    course_classes = models.IntegerField(null=True)
+    course_credit = models.FloatField(null=True)
     course_fee = models.IntegerField()
     course_img = models.ImageField(null=True, blank=True, upload_to="images/")
 

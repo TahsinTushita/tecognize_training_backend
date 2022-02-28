@@ -79,12 +79,14 @@ def instructor_list(request):
         inst_name = request.POST.get("inst_name")
         inst_designation = request.POST.get("inst_designation")
         inst_description = request.POST.get("inst_description")
+        inst_quote = request.POST.get("inst_quote")
         inst_img = request.FILES["inst_img"]
         inst_serializer = InstructorSerializer(
             data={
                 "inst_name": inst_name,
                 "inst_designation": inst_designation,
                 "inst_description": inst_description,
+                "inst_quote": inst_quote,
                 "inst_img": inst_img,
             }
         )
@@ -154,8 +156,21 @@ def category_list(request):
         return JsonResponse(cat_serializer.data, safe=False)
 
     elif request.method == "POST":
-        cat_data = JSONParser().parse(request)
-        cat_serializer = CategorySerializer(data=cat_data)
+        # cat_data = JSONParser().parse(request)
+        # cat_serializer = CategorySerializer(data=cat_data)
+        # if cat_serializer.is_valid():
+        #     cat_serializer.save()
+        #     return JsonResponse(cat_serializer.data, status=status.HTTP_201_CREATED)
+        # return JsonResponse(cat_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        category = request.POST.get("category")
+        cat_img = request.FILES["cat_img"]
+        cat_serializer = CategorySerializer(
+            data={
+                "category": category,
+                "cat_img": cat_img,
+            }
+        )
         if cat_serializer.is_valid():
             cat_serializer.save()
             return JsonResponse(cat_serializer.data, status=status.HTTP_201_CREATED)
@@ -182,6 +197,9 @@ def course_list(request):
         inst_id = request.POST.get("inst_id")
         course_title = request.POST.get("course_title")
         course_desc = request.POST.get("course_desc")
+        course_content = request.POST.get("course_content")
+        course_classes = request.POST.get("course_classes")
+        course_credit = request.POST.get("course_credit")
         course_fee = request.POST.get("course_fee")
         course_img = request.FILES["course_img"]
         course_serializer = CourseSerializer(
@@ -190,6 +208,9 @@ def course_list(request):
                 "inst_id": inst_id,
                 "course_title": course_title,
                 "course_desc": course_desc,
+                "course_content": course_content,
+                "course_classes": course_classes,
+                "course_credit": course_credit,
                 "course_fee": course_fee,
                 "course_img": course_img,
             }
