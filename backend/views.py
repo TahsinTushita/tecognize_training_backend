@@ -236,7 +236,7 @@ def popular_courses(request):
     )
 
 
-@api_view("GET")
+@api_view(["GET"])
 def single_course(request, course_id):
     cursor = connection.cursor()
     query = "SELECT course_id,course_title,course_desc,course_content,course_classes,course_credit,course_fee,course_img,inst_name,category FROM backend_course INNER JOIN backend_instructor ON backend_course.inst_id=backend_instructor.inst_id INNER JOIN backend_category ON backend_course.cat_id=backend_category.cat_id WHERE course_id=%s"
@@ -304,7 +304,7 @@ def blog_list(request):
         return JsonResponse(blog_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view("GET")
+@api_view(["GET"])
 def single_blog(request, blog_id):
     cursor = connection.cursor()
     query = "SELECT * from backend_blog WHERE blog_id=%s"
