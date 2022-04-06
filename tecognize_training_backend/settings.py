@@ -100,6 +100,7 @@ DATABASES = {
 }
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = None
+FILE_UPLOAD_MAX_MEMORY_SIZE = None
 
 
 # Password validation
