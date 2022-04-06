@@ -224,6 +224,30 @@ def course_list(request):
         )
 
 
+@api_view(["GET"])
+def popular_courses(request):
+    cursor = connection.cursor()
+    query = "SELECT course_title,course_id,course_img,course_credit,course_classes,inst_name FROM backend_course INNER JOIN backend_instructor ON backend_course.inst_id=backend_instructor.inst_id"
+    cursor.execute(query)
+
+    columns = [col[0] for col in cursor.description]
+    return JsonResponse(
+        [dict(zip(columns, row)) for row in cursor.fetchall()], safe=False
+    )
+
+
+@api_view("GET")
+def single_course(request, course_id):
+    cursor = connection.cursor()
+    query = "SELECT course_id,course_title,course_desc,course_content,course_classes,course_credit,course_fee,course_img,inst_name,category FROM backend_course INNER JOIN backend_instructor ON backend_course.inst_id=backend_instructor.inst_id INNER JOIN backend_category ON backend_course.cat_id=backend_category.cat_id WHERE course_id=%s"
+
+    cursor.execute(query, params=(course_id))
+    columns = [col[0] for col in cursor.description]
+    return JsonResponse(
+        [dict(zip(columns, row)) for row in cursor.fetchall()], safe=False
+    )
+
+
 @api_view(["GET", "POST"])
 def gallery_list(request):
     if request.method == "GET":
@@ -278,6 +302,18 @@ def blog_list(request):
             blog_serializer.save()
             return JsonResponse(blog_serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(blog_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view("GET")
+def single_blog(request, blog_id):
+    cursor = connection.cursor()
+    query = "SELECT * from backend_blog WHERE blog_id=%s"
+
+    cursor.execute(query, params=(blog_id))
+    columns = [col[0] for col in cursor.description]
+    return JsonResponse(
+        [dict(zip(columns, row)) for row in cursor.fetchall()], safe=False
+    )
 
 
 @api_view(["GET", "POST"])
