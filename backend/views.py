@@ -1,5 +1,5 @@
 from django.db.models import query
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
@@ -7,6 +7,8 @@ from rest_framework import status
 import base64
 from django.db import connection
 from django.http import HttpResponse
+from .forms import ContactForm
+from django.core.mail import send_mail, BadHeaderError
 
 from backend.models import (
     Course,
@@ -350,3 +352,31 @@ def review_list(request):
 def getImage(request, imgName):
     image_data = open("media/images/" + imgName, "rb").read()
     return HttpResponse(image_data, content_type="image/png")
+
+
+def contact(request):
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            subject = "Website Inquiry"
+            body = {
+                "first_name": form.cleaned_data["first_name"],
+                "last_name": form.cleaned_data["last_name"],
+                "email": form.cleaned_data["email_address"],
+                "message": form.cleaned_data["message"],
+            }
+            message = "\n".join(body.values())
+
+            try:
+                send_mail(
+                    subject,
+                    message,
+                    "training@tecognize.com",  # office email
+                    ["training@tecognize.com"],  # office email
+                )
+            except BadHeaderError:
+                return HttpResponse("Invalid header found.")
+            return redirect("contact")
+
+    form = ContactForm()
+    return render(request, "index.html", {"form": form})  # course outline form page
